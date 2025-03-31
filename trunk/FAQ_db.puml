@@ -1,0 +1,43 @@
+@startuml
+' Define direction
+top to bottom direction
+
+' Define entities
+entity "CHAPTERS" {
+    +CHAP_ID : int
+    --
+    CHAP_NAME : varchar(255) 
+}
+
+entity "SUBCHAPTERS" {
+  +CHAP_ID : int
+  +SUB_CHAP_ID : int
+  --
+  SUB_CHAP_NAME : varchar(255)
+}
+
+entity "SECTIONS" {
+  +CHAP_ID : int
+  +SUB_CHAP_ID : int
+  +SEC_ID: int
+  --
+  SEC_NAME: varchar(255)
+  SEC_DESC: text
+}
+
+entity "SUBSECTIONS" {
+  +CHAP_ID : int
+  +SUB_CHAP_ID : int
+  +SEC_ID: int
+  +SUB_SEC_ID: int
+  --
+  SUB_SEC_NAME: varchar(255)
+  SUB_SEC_CONTENT: text
+}
+
+' Define relationships
+CHAPTERS ||--o{ SUBCHAPTERS : contains
+SUBCHAPTERS ||--o{ SECTIONS : contains
+SECTIONS ||--o{ SUBSECTIONS : contains
+
+@enduml

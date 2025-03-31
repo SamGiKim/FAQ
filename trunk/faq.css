@@ -1,0 +1,583 @@
+/* faq.css 파일에 추가 */
+.input-form {
+  display: flex;
+  flex-direction: column;
+  max-width: 600px;
+  margin: auto;
+}
+
+.input-form label,
+.input-form input,
+.input-form textarea {
+  width: 100%;
+  margin-bottom: 10px;
+}
+/* 기존 스타일에 추가 */
+.input-form textarea,
+.input-form input[type="text"],
+.input-form select {
+  box-sizing: border-box; /* 패딩과 테두리를 너비에 포함 */
+  /* 필요한 경우 추가 스타일 속성 */
+}
+
+/* 특정 요소에 대한 스타일이 필요하다면 */
+#sub_section_content,
+#section_description {
+  max-width: 600px; /* 다른 입력란과 일치하는 최대 너비 설정 */
+  width: 100%; /* 부모 요소에 맞춰 너비 설정 */
+  /* 필요한 경우 추가 스타일 속성 */
+}
+
+.input-form span{
+  color: rgba(128, 128, 128, 0.842);
+  font-size: 10px;
+  margin-left: 5px;
+}
+
+.input-form label {
+  font-weight: bold;
+}
+
+.input-form input[type="text"],
+.input-form textarea {
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+textarea {
+  width: 100%; /* 전체 너비를 차지하도록 설정 */
+  height: 150px; /* 적절한 높이 설정 */
+  resize: vertical; /* 사용자가 세로로만 크기 조절 가능하도록 설정 */
+}
+
+.input-form input[type="submit"] {
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.input-form input[type="submit"]:hover {
+  background-color: #0056b3;
+}
+
+.input-form select,
+.input-form input[type="text"] {
+  width: 100%; /* 너비를 100%로 설정하여 부모 요소의 너비에 맞춤 */
+  padding: 8px; /* 적절한 패딩을 적용 */
+  margin-bottom: 10px; /* 하단 마진 추가 */
+  border: 1px solid #ccc; /* 테두리 스타일 적용 */
+  border-radius: 4px; /* 테두리 둥글게 처리 */
+  box-sizing: border-box; /* 패딩과 테두리를 너비에 포함시킴 */
+}
+
+.input-form label {
+  display: block; /* label을 블록 요소로 만들어 줄 바꿈 효과 적용 */
+  margin-bottom: 5px; /* label 아래 마진 추가 */
+  font-weight: bold;
+}
+
+.add-new,
+.new-option{
+  background-color: #FF9BD2;
+  color: white;
+  font-weight: bold;
+}
+
+
+/* 테두리 번쩍이는 애니메이션 */
+/* 애니메이션 적용 스타일 */
+.add-field-active {
+  display: block; /* 활성 상태에서 보이게 설정 */
+  animation: blinkBorder 3s infinite; /* 번쩍이는 효과 적용 */
+}
+
+input:focus, textarea:focus {
+  outline: none;
+}
+
+
+.navigation {
+    display: flex;
+    justify-content: space-between;
+    margin: 20px 0;
+}
+
+.navigation a {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+}
+
+.navigation a:hover {
+    background-color:  #007bff;
+}
+
+input[type="number"] {
+    width: 100px;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    margin-bottom: 10px;
+}
+
+.page-number {
+  display: inline-block;
+  margin-left: 5px;
+  padding: 2px 6px;
+  background-color: #f0f0f0;
+  border-radius: 3px;
+  color: #666;
+  text-decoration: none;
+  font-size: 0.9em;
+}
+
+.page-number:hover {
+  background-color: #007bff;
+  color: white;
+}
+
+.navigation {
+  margin: 20px 0;
+  display: flex;
+  justify-content: space-between;
+}
+
+.navigation a {
+  padding: 8px 15px;
+  background-color: #f0f0f0;
+  color: #666;
+  text-decoration: none;
+  border-radius: 4px;
+}
+
+.navigation a:hover {
+  background-color: #88b9ee;
+  color: white;
+}
+
+.version-checkbox-group {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+
+/* 버전 옵션 컨테이너 타일 */
+.version-option {
+  margin-top: 5px;
+  margin-left: 10px;
+  font-size: 0.9em;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+/* 체크박스와 라벨 스타일 */
+.version-option input[type="checkbox"] {
+  width: auto;
+  margin: 0;
+}
+
+.version-option label {
+  font-weight: normal;
+  color: #666;
+  margin: 0;
+  font-size: 0.9em;
+  display: inline;
+  width: auto;
+}
+
+/* 버전 번호 표시 스타일 */
+.version-number {
+  font-size: 0.85em;
+  color: #666;
+  background-color: #f5f5f5;
+  padding: 2px 6px;
+  border-radius: 3px;
+  margin-left: 5px;
+}
+
+/* 입력 그룹 컨테이너 수정 */
+.input-group {
+  position: relative;
+  margin-bottom: 15px;
+}
+
+/* 새로운 입력 필드에 대한 스타일 */
+#new_chapter,
+#new_sub_chapter,
+#new_section,
+#new_sub_section {
+    font-weight: bold;  /* 글자 두껍게 */
+    color: #333;  /* 글자색 진하게 */
+    padding: 10px;  /* 내부 여백 */
+    border-radius: 4px;  /* 모서리 둥글게 */
+    background-color: #fff;  /* 배경색 흰색 */
+    transition: all 0.3s ease;  /* 부드러운 전환 효과 */
+}
+
+/* 포커스 시 스타일 */
+#new_chapter:focus,
+#new_sub_chapter:focus,
+#new_section:focus,
+#new_sub_section:focus {
+    border-color: #26a3d0;  /* 포커스 시 테두리 색상 변경 */
+    box-shadow: 0 0 5px rgba(11, 164, 236, 0.5);  /* 포커스 시 그림자 효과 */
+}
+
+/* 입력 중일 때 스타일 */
+#new_chapter:not(:placeholder-shown),
+#new_sub_chapter:not(:placeholder-shown),
+#new_section:not(:placeholder-shown),
+#new_sub_section:not(:placeholder-shown) {
+    background-color: #ccdeee;  /* 입력 중일 때 배경색 살짝 변경 */
+}
+
+/* 네비게이션 스타일 */
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    background-color: #f8f9fa;
+    border-bottom: 1px solid #dee2e6;
+    margin-bottom: 20px;
+}
+
+.nav-left .home-button {
+    color: #0056b3;
+    text-decoration: none;
+    font-weight: bold;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+    font-size: 1.1em;
+}
+
+.nav-left .home-button:hover {
+    background-color: #e9ecef;
+}
+
+.nav-right .write-button {
+  
+    background-color: #0056b3;
+    color: white;
+    text-decoration: none;
+    padding: 8px 15px;
+    border-radius: 4px;
+    transition: background-color 0.3s;
+}
+
+.nav-right .write-button:hover {
+    background-color: #003d80;
+}
+
+/* 콘텐츠 컨테이너 스타일 수정 */
+.content-container {
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    display: flex;
+    gap: 30px;
+}
+
+.subsection-content {
+    flex: 1;
+    min-width: 0;
+    background-color: white;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.section-description {
+    width: 300px;
+    min-width: 300px;
+    background-color: #f8f9fa;
+    padding: 20px;
+    border-radius: 8px;
+    align-self: flex-start;
+    position: sticky;
+    top: 20px;
+}
+
+/* 기존 스타일 유지 */
+.section-description h2 {
+    color: #333;
+    margin-bottom: 15px;
+    font-size: 1.5em;
+}
+
+.subsection-content h2 {
+    color: #0056b3;
+    margin-bottom: 20px;
+    font-size: 1.4em;
+}
+
+.content {
+    line-height: 1.6;
+    color: #333;
+}
+
+/* view-container 스타일 수정 */
+.view-container {
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.view-container h1 {
+    color: #333;
+    margin-bottom: 30px;
+    text-align: center;
+    font-size: 2em;
+}
+
+/* 수정/삭제 버튼 컨테이너 수정 */
+.edit-button-container {
+    display: flex;
+    justify-content: center;
+    margin-top: 50px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+/* 수정 버튼 스타일 수정 */
+.edit-button {
+    background-color: #0056b3;
+    color: white;
+    border: none;
+    padding: 12px 40px;      /* 좌우 패딩 증가 */
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em;        /* 폰트 크기 증가 */
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 200px;        /* 최소 너비 설정 */
+    justify-content: center;  /* 내용 중앙 정렬 */
+}
+
+/* 수정 버튼 호버 효과 */
+.edit-button:hover {
+    background-color: #003d80;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+/* 수정 버튼 클릭 효과 */
+.edit-button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* 수정 버튼에 아이콘 추가 */
+.edit-button::before {
+    content: "✎";
+    font-size: 1.2em;
+}
+
+/* 수정 모드의 입력 필드 스타일 */
+.edit-field {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1em;
+    background-color: #fff;
+    transition: all 0.3s ease;
+}
+
+.edit-field:focus {
+    border-color: #0056b3;
+    box-shadow: 0 0 5px rgba(0, 86, 179, 0.3);
+    outline: none;
+}
+
+.edit-field:hover {
+    border-color: #0056b3;
+}
+
+/* 삭제 버튼 스타일 */
+.delete-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 12px 40px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 1.1em;
+    font-weight: bold;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    min-width: 200px;
+    justify-content: center;
+}
+
+.delete-button:hover {
+    background-color: #c82333;
+    transform: translateY(-2px);
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+}
+
+.delete-button:active {
+    transform: translateY(0);
+    box-shadow: none;
+}
+
+/* 삭제 버튼 아이콘 */
+.delete-button::before {
+    content: "🗑";
+    font-size: 1.2em;
+}
+
+.input-form .help-text {
+    font-size: 0.8em;
+    color: #666;
+    font-weight: normal;
+    margin-left: 5px;
+}
+
+.pagination {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin: 20px 0;
+}
+
+.pagination .page-number {
+    padding: 8px 15px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    text-decoration: none;
+    color: #333;
+    transition: all 0.3s ease;
+}
+
+.pagination .page-number:hover {
+    background-color: #f0f0f0;
+}
+
+.pagination .page-number.active {
+    background-color: #007bff;
+    color: white;
+    border-color: #007bff;
+}
+
+/* FAQ 섹션 스타일 */
+#sections-container {
+  margin: 20px 0;
+}
+
+.section-group {
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  padding: 20px;
+  margin-bottom: 20px;
+  background-color: #f9f9f9;
+}
+
+.section-header {
+  margin-bottom: 20px;
+  padding-bottom: 15px;
+  border-bottom: 2px solid #eee;
+}
+
+.subsections-container {
+  margin-left: 20px;  /* 섹션으로부터 들여쓰기 */
+}
+
+.subsection-group {
+  background-color: white;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  padding: 15px;
+  margin-bottom: 15px;
+}
+
+.subsection-header {
+  margin-bottom: 15px;
+}
+
+.subsection-content {
+  margin-top: 15px;
+}
+
+/* 버튼 스타일 */
+.add-section-btn {
+  display: block;
+  width: 200px;
+  margin: 0 0 20px 0;
+  padding: 10px 20px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.add-subsection-btn {
+  margin: 10px 0 10px 0px;
+  padding: 8px 15px;
+  background-color: #2196F3;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.remove-section-btn,
+.remove-subsection-btn {
+  margin-left: 10px;
+  padding: 5px 10px;
+  background-color: #ff4444;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+/* 호버 효과 */
+.add-section-btn:hover { background-color: #45a049; }
+.add-subsection-btn:hover { background-color: #1976D2; }
+.remove-section-btn:hover,
+.remove-subsection-btn:hover { background-color: #cc0000; }
+
+/* 라벨 스타일 */
+label {
+  display: block;
+  margin-bottom: 8px;
+  font-weight: bold;
+}
+
+label span {
+  margin-left: 8px;
+  color: #666;
+  font-weight: normal;
+}
+
+/* 입력 필드 스타일 */
+input[type="text"] {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+/* 에디터 컨테이너 */
+.sun-editor-editable {
+  margin-top: 10px;
+  width: 100%;
+}
+
