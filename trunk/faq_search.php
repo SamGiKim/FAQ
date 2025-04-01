@@ -37,12 +37,33 @@ if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $stmt->execute();
     $result = $stmt->get_result();
 
+    // 결과 배열에 섹션을 그룹화하여 저장
+    $groupedResults = [];
+    
     while ($row = $result->fetch_assoc()) {
+        $secName = $row["SEC_NAME"];
+
+        // 섹션이 이미 그룹에 존재하면 서브섹션 추가
+        if (!isset($groupedResults[$secName])) {
+            $groupedResults[$secName] = [
+                "CHAP_NAME" => $row["CHAP_NAME"],
+                "SUB_CHAP_NAME" => $row["SUB_CHAP_NAME"],
+                "SEC_NAME" => $secName,
+                "SUB_SECTIONS" => []
+            ];
+        }
+
+        // 서브섹션 추가
+        $groupedResults[$secName]["SUB_SECTIONS"][] = $row["SUB_SEC_NAME"];
+    }
+
+    // 최종 결과 배열 생성
+    foreach ($groupedResults as $sec) {
         $results[] = [
-            "CHAP_NAME" => $row["CHAP_NAME"],
-            "SUB_CHAP_NAME" => $row["SUB_CHAP_NAME"],
-            "SEC_NAME" => $row["SEC_NAME"],
-            "SUB_SEC_NAME" => $row["SUB_SEC_NAME"]
+            "CHAP_NAME" => $sec["CHAP_NAME"],
+            "SUB_CHAP_NAME" => $sec["SUB_CHAP_NAME"],
+            "SEC_NAME" => $sec["SEC_NAME"],
+            "SUB_SEC_NAMES" => $sec["SUB_SECTIONS"]
         ];
     }
 

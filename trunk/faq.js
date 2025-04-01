@@ -151,8 +151,8 @@ function faqSearch() {
 			data.results.forEach(result => {
 				resultHTML += `
 					<div class="result-item">
-						<h3>챕터: ${result.CHAP_NAME || "없음"}</h3>
-						<p><strong>서브 챕터:</strong> ${result.SUB_CHAP_NAME || "없음"}</p>
+						<h3>${result.CHAP_NAME}</h3>
+						<p>${result.SUB_CHAP_NAME}</p>
 						<br></br>
 					</div>
 				`;
