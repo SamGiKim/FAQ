@@ -6,8 +6,9 @@ mysqli_set_charset($dbconnect, "utf8");
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
     $keyword = isset($_POST["keyword"]) ? trim($_POST["keyword"]) : "";
 
-    if (empty($keyword)) {
-        echo json_encode(["error" => "검색어를 입력하세요."]);
+    // 🔥 검색어가 완전히 비어 있으면 빈 결과 반환
+    if (strlen($keyword) === 0) {
+        echo json_encode(["results" => [], "error" => "검색어를 입력하세요."]);
         exit;
     }
 

@@ -133,6 +133,7 @@ function faqSearch() {
 	var mainFrame = document.getElementById('id-chapter');
 	var reference = document.getElementById('id-reference');
 
+	// 검색 요청 (AJAX)
 	fetch("faq_search.php", {
 		method: "POST",
 		headers: {
@@ -152,8 +153,7 @@ function faqSearch() {
 					<div class="result-item">
 						<h3>챕터: ${result.CHAP_NAME || "없음"}</h3>
 						<p><strong>서브 챕터:</strong> ${result.SUB_CHAP_NAME || "없음"}</p>
-						<p><strong>섹션:</strong> ${result.SEC_NAME || "없음"}</p>
-						<p><strong>서브 섹션:</strong> ${result.SUB_SEC_NAME || "없음"}</p>
+						<br></br>
 					</div>
 				`;
 			});
