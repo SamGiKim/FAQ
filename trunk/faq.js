@@ -130,7 +130,8 @@ function initializeForm() {
 function faqSearch() {
 	const word_el = document.querySelector("#search-input");
 	let keyword = word_el.value;
-	var mainFrame = document.getElementById('id-main-frame');
+	var mainFrame = document.getElementById('id-chapter');
+	var reference = document.getElementById('id-reference');
 
 	fetch("faq_search.php", {
 		method: "POST",
@@ -141,7 +142,8 @@ function faqSearch() {
 	})
 	.then(response => response.json())
 	.then(data => {
-		mainFrame.innerHTML = "";
+		mainFrame.innerHTML = ""; // 기존 내용 지우기
+		reference.innerHTML = "";
 
 		if (data.results.length > 0) {
 			let resultHTML = "<h2>검색 결과</h2>";
