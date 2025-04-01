@@ -126,7 +126,42 @@ function initializeForm() {
 // 	// validateForm(); // 초기 상태 설정
 // }
 
+// 검색
+function faqSearch() {
+	const word_el = document.querySelector("#search-input");
+	let keyword = word_el.value;
+	var mainFrame = document.getElementById('id-main-frame');
 
+	fetch("faq_search.php", {
+		method: "POST",
+		headers: {
+			"Content-Type": "application/x-www-form-urlencoded"
+		},
+		body: `keyword=${encodeURIComponent(keyword)}`
+	})
+	.then(response => response.json())
+	.then(data => {
+		mainFrame.innerHTML = "";
+
+		if (data.results.length > 0) {
+			let resultHTML = "<h2>검색 결과</h2>";
+			data.results.forEach(result => {
+				resultHTML += `
+					<div class="result-item">
+						<h3>챕터: ${result.CHAP_NAME || "없음"}</h3>
+						<p><strong>서브 챕터:</strong> ${result.SUB_CHAP_NAME || "없음"}</p>
+						<p><strong>섹션:</strong> ${result.SEC_NAME || "없음"}</p>
+						<p><strong>서브 섹션:</strong> ${result.SUB_SEC_NAME || "없음"}</p>
+					</div>
+				`;
+			});
+			mainFrame.innerHTML = resultHTML;
+		} else {
+			mainFrame.innerHTML = `<p class="no-results">검색 결과가 없습니다.</p>`;
+		}
+	})
+	.catch(error => console.error("검색 오류:", error));
+}
 
 // 이벤트 설정 함수(섹션 추가, 섹션 삭제 버튼)
 function setupSectionEvents() {
@@ -135,6 +170,13 @@ function setupSectionEvents() {
 
 	// 2. 모든 버튼 클릭 처리를 하나의 이벤트 리스너로 통합
 	document.addEventListener('click', (e) => {
+			// TODO: 클릭한 엘리먼트를 필터링
+			
+			// 검색 버튼 클릭시
+			if(e.target.getAttribute("id") == "search-button") {
+				faqSearch();
+			}
+
 			// 섹션 삭제 버튼 클릭 시
 			if (e.target.matches('.delete-section-btn') || e.target.closest('.delete-section-btn')) {
 					const container = document.getElementById('sections-container');

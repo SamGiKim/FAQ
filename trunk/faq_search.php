@@ -4,48 +4,49 @@ require_once "faq_db.php";
 mysqli_set_charset($dbconnect, "utf8");
 
 if ($_SERVER["REQUEST_METHOD"] === "POST") {
-    $keyword = $_POST["keyword"];
+    $keyword = isset($_POST["keyword"]) ? trim($_POST["keyword"]) : "";
 
-    // CHAPTERS와 SUBCHAPTERS에서 검색어를 포함한 항목을 찾기 위한 쿼리
-    $chaptersQuery = "SELECT * FROM CHAPTERS WHERE CHAP_NAME LIKE ?";
-    $stmt = $dbconnect->prepare($chaptersQuery);
-    $likeKeyword = "%" . $keyword . "%";
-    $stmt->bind_param("s", $likeKeyword);
-    $stmt->execute();
-    $chaptersResult = $stmt->get_result();
-
-    $results = [];
-    while ($chapter = $chaptersResult->fetch_assoc()) {
-        // 해당 챕터의 서브챕터를 찾기 위한 쿼리
-        $subChaptersQuery = "
-            SELECT
-                MIN(SUB_CHAP_ID) AS SUB_CHAP_ID,
-                SUB_CHAP_NAME,
-                POSITIONS,
-                GROUP_CONCAT(VERSIONS ORDER BY VERSIONS ASC) AS VERSIONS_GROUP
-            FROM SUBCHAPTERS
-            WHERE CHAP_ID = {$chapter['CHAP_ID']} AND (SUB_CHAP_NAME LIKE ? OR SUB_CHAP_DESC LIKE ?)
-            GROUP BY POSITIONS, SUB_CHAP_NAME
-            ORDER BY POSITIONS ASC
-        ";
-        $stmt = $dbconnect->prepare($subChaptersQuery);
-        $stmt->bind_param("ss", $likeKeyword, $likeKeyword);
-        $stmt->execute();
-        $subChaptersResult = $stmt->get_result();
-
-        while ($subChapter = $subChaptersResult->fetch_assoc()) {
-            $results[] = [
-                'name' => $subChapter['SUB_CHAP_NAME'],
-                'desc' => $subChapter['SUB_CHAP_DESC'],
-                'chap_id' => $chapter['CHAP_ID'],
-                'sub_chap_id' => $subChapter['SUB_CHAP_ID'],
-                'positions' => $subChapter['POSITIONS'],
-                'versions_group' => $subChapter['VERSIONS_GROUP']
-            ];
-        }
+    if (empty($keyword)) {
+        echo json_encode(["error" => "검색어를 입력하세요."]);
+        exit;
     }
 
-    // 결과를 JSON 형식으로 반환
-    echo json_encode($results);
+    $likeKeyword = "%" . $keyword . "%";
+    $results = [];
+
+    // CHAPTERS, SUBCHAPTERS, SECTIONS, SUBSECTIONS에서 검색
+    $query = "
+        SELECT 
+            c.CHAP_NAME, 
+            s.SUB_CHAP_NAME, 
+            sec.SEC_NAME, 
+            subsec.SUB_SEC_NAME
+        FROM CHAPTERS c
+        LEFT JOIN SUBCHAPTERS s ON c.CHAP_ID = s.CHAP_ID
+        LEFT JOIN SECTIONS sec ON s.SUB_CHAP_ID = sec.SUB_CHAP_ID
+        LEFT JOIN SUBSECTIONS subsec ON sec.SEC_ID = subsec.SEC_ID
+        WHERE 
+            s.SUB_CHAP_NAME LIKE ? 
+            OR sec.SEC_NAME LIKE ? 
+            OR subsec.SUB_SEC_NAME LIKE ?
+    ";
+
+    $stmt = $dbconnect->prepare($query);
+    $stmt->bind_param("sss", $likeKeyword, $likeKeyword, $likeKeyword);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    while ($row = $result->fetch_assoc()) {
+        $results[] = [
+            "CHAP_NAME" => $row["CHAP_NAME"],
+            "SUB_CHAP_NAME" => $row["SUB_CHAP_NAME"],
+            "SEC_NAME" => $row["SEC_NAME"],
+            "SUB_SEC_NAME" => $row["SUB_SEC_NAME"]
+        ];
+    }
+
+    // JSON 반환
+    header('Content-Type: application/json; charset=utf-8');
+    echo json_encode(["results" => $results], JSON_UNESCAPED_UNICODE);
 }
 ?>
