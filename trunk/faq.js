@@ -126,44 +126,116 @@ function initializeForm() {
 // 	// validateForm(); // 초기 상태 설정
 // }
 
+// FAQ 내용을 동적으로 로드
+function loadFAQContent(chapId, subChapId, position, version) {
+    fetch(`get_faq_view.php?chap_id=${chapId}&sub_chap_id=${subChapId}&position=${position}&version=${version}`)
+        .then(response => response.json())
+        .then(data => {
+            const mainContent = document.querySelector('.main-frame article.chapter');
+            const reference = document.querySelector('.reference');
+
+            // 메인 콘텐츠 구성
+            let mainHTML = ``;
+
+            data.sections.forEach(section => {
+                mainHTML += `
+                    <div class="section">
+                        <h3 class="section-title">섹션: ${section.SEC_NAME}</h3>
+                        <div class="section-content">${section.SEC_DESC || ''}</div>
+                        ${section.subsections ? section.subsections.map(subsection => {
+                            return `
+                                <div class="sub-section">
+                                    <h5 class="subsection-title">서브섹션: ${subsection.SUB_SEC_NAME}</h5>
+                                    <div class="content">${subsection.SUB_SEC_CONTENT || ''}</div>
+                                </div>
+                            `;
+                        }).join('') : ''}
+                    </div>
+                `;
+            });
+
+            mainContent.innerHTML = `<h1>${data.chapter}</h1>
+                                    <h2>${data.subChapter.name}</h2>` + 
+                                    `<main class="scrollmini">` + mainHTML + `</main>`;
+
+            // Reference 섹션 업데이트
+            reference.innerHTML = `
+                <section>
+                    <div class="description-content">
+                        ${data.subChapter.desc || ''}
+                    </div>
+                </section>
+            `;
+        })
+        .catch(error => console.error("FAQ 내용 로딩 오류:", error));
+}
+
+
 // 검색
 function faqSearch() {
-	const word_el = document.querySelector("#search-input");
-	let keyword = word_el.value;
-	var mainFrame = document.getElementById('id-chapter');
-	var reference = document.getElementById('id-reference');
+    const word_el = document.querySelector("#search-input"); // 검색 필드에서 값을 가져옴
+    let keyword = word_el.value;
+    var mainFrame = document.getElementById('id-chapter');
+    var reference = document.getElementById('id-reference');
 
-	// 검색 요청 (AJAX)
-	fetch("faq_search.php", {
-		method: "POST",
-		headers: {
-			"Content-Type": "application/x-www-form-urlencoded"
-		},
-		body: `keyword=${encodeURIComponent(keyword)}`
-	})
-	.then(response => response.json())
-	.then(data => {
-		mainFrame.innerHTML = ""; // 기존 내용 지우기
-		reference.innerHTML = "";
+    // 검색 요청 (AJAX)
+    fetch("faq_search.php", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/x-www-form-urlencoded"
+        },
+        body: `keyword=${encodeURIComponent(keyword)}`
+    })
+    .then(response => response.json())
+    .then(data => {
+        mainFrame.innerHTML = ""; // 기존 내용 지우기
+        reference.innerHTML = "";
 
-		if (data.results.length > 0) {
-			let resultHTML = "<h2>검색 결과</h2>";
-			data.results.forEach(result => {
-				resultHTML += `
-					<div class="result-item">
-						<h3>${result.CHAP_NAME}</h3>
-						<p>${result.SUB_CHAP_NAME}</p>
-						<br></br>
-					</div>
-				`;
-			});
-			mainFrame.innerHTML = resultHTML;
-		} else {
-			mainFrame.innerHTML = `<p class="no-results">검색 결과가 없습니다.</p>`;
-		}
-	})
-	.catch(error => console.error("검색 오류:", error));
+		// 검색 결과가 존재할 경우
+        if (data.results.length > 0) {
+            let resultHTML = "<h2>검색 결과</h2>";
+            data.results.forEach(result => {
+                let chapId = result.CHAP_ID;
+                let subChapId = result.SUB_CHAP_ID;
+                let position = result.POSITION; 
+                let version = result.VERSION;
+
+                resultHTML += `
+                    <div class="result-item">
+                        <a href="#" class="faq-result-link" 
+                           data-chap-id="${chapId}"
+                           data-sub-chap-id="${subChapId}"
+                           data-position="${position}"
+                           data-version="${version}">
+                           ${result.CHAP_NAME}
+                        </a>
+                        <p>${result.SUB_CHAP_NAME}</p>
+                        <br>
+                    </div>
+                `;
+            });
+            mainFrame.innerHTML = resultHTML;
+        } else {
+            mainFrame.innerHTML = `<p class="no-results">검색 결과가 없습니다.</p>`;
+        }
+
+        // 검색 결과 링크 클릭 시 해당 FAQ 내용 로드
+        document.querySelectorAll('.faq-result-link').forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                const chapId = e.target.dataset.chapId;
+                const subChapId = e.target.dataset.subChapId;
+                const position = e.target.dataset.position;
+                const version = e.target.dataset.version;
+
+                loadFAQContent(chapId, subChapId, position, version);  // 동적으로 FAQ 로드
+            });
+        });
+    })
+    .catch(error => console.error("검색 오류:", error));
 }
+
 
 // 이벤트 설정 함수(섹션 추가, 섹션 삭제 버튼)
 function setupSectionEvents() {
