@@ -127,12 +127,19 @@ function initializeForm() {
 // }
 
 // FAQ 내용을 동적으로 로드
-function loadFAQContent(chapId, subChapId, position, version) {
+function loadSearchFAQContent(chapId, subChapId, position, version) {
     fetch(`get_faq_view.php?chap_id=${chapId}&sub_chap_id=${subChapId}&position=${position}&version=${version}`)
         .then(response => response.json())
         .then(data => {
             const mainContent = document.querySelector('.main-frame article.chapter');
             const reference = document.querySelector('.reference');
+
+			// 수정,삭제 버튼과 페이지네이션 보이기
+			const editContainer = document.querySelector(".edit-button-container");
+			const pagination = document.querySelector(".pagenation");
+		
+			if (editContainer) editContainer.style.display = "flex";
+			if (pagination) pagination.style.display = "flex";
 
             // 메인 콘텐츠 구성
             let mainHTML = ``;
@@ -178,6 +185,13 @@ function faqSearch() {
     var mainFrame = document.getElementById('id-chapter');
     var reference = document.getElementById('id-reference');
 
+	// 수정,삭제 버튼과 페이지네이션 숨기기
+    const editContainer = document.querySelector(".edit-button-container");
+    const pagination = document.querySelector(".pagenation");
+
+    if (editContainer) editContainer.style.display = "none";
+    if (pagination) pagination.style.display = "none";
+	
     // 검색 요청 (AJAX)
     fetch("faq_search.php", {
         method: "POST",
@@ -219,7 +233,7 @@ function faqSearch() {
             mainFrame.innerHTML = `<p class="no-results">검색 결과가 없습니다.</p>`;
         }
 
-        // 검색 결과 링크 클릭 시 해당 FAQ 내용 로드
+        // 링크 클릭 시 해당 FAQ 내용 로드
         document.querySelectorAll('.faq-result-link').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
@@ -229,7 +243,7 @@ function faqSearch() {
                 const position = e.target.dataset.position;
                 const version = e.target.dataset.version;
 
-                loadFAQContent(chapId, subChapId, position, version);  // 동적으로 FAQ 로드
+                loadSearchFAQContent(chapId, subChapId, position, version);  // 동적으로 FAQ 로드
             });
         });
     })
