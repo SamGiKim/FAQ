@@ -131,13 +131,32 @@ function loadSearchFAQContent(chapId, subChapId, position, version) {
     fetch(`get_faq_view.php?chap_id=${chapId}&sub_chap_id=${subChapId}&position=${position}&version=${version}`)
         .then(response => response.json())
         .then(data => {
+			// 관리자 버튼들의 hidden input 값 설정
+			['current', 'new', 'delete'].forEach(prefix => {
+				const element = document.getElementById(`${prefix}_chap_id`);
+				if (element) {
+					element.value = chapId;
+				}
+				const subElement = document.getElementById(`${prefix}_sub_chap_id`);
+				if (subElement) {
+					subElement.value = subChapId;
+				}
+				const posElement = document.getElementById(`${prefix}_position`);
+				if (posElement) {
+					posElement.value = position;
+				}
+				const verElement = document.getElementById(`${prefix}_version`);
+				if (verElement) {
+					verElement.value = version;
+				}
+			});
+
             const mainContent = document.querySelector('.main-frame article.chapter');
             const reference = document.querySelector('.reference');
-
-			// 수정,삭제 버튼과 페이지네이션 보이기
 			const editContainer = document.querySelector(".edit-button-container");
 			const pagination = document.querySelector(".pagenation");
-		
+			
+			// 수정, 삭제 버튼과 페이지네이션 보이기
 			if (editContainer) editContainer.style.display = "flex";
 			if (pagination) pagination.style.display = "flex";
 
@@ -146,12 +165,12 @@ function loadSearchFAQContent(chapId, subChapId, position, version) {
 
             data.sections.forEach(section => {
                 mainHTML += `
-                    <div class="section">
+                    <div class="section" data-id="${section.SEC_ID}">
                         <h3 class="section-title">섹션: ${section.SEC_NAME}</h3>
                         <div class="section-content">${section.SEC_DESC || ''}</div>
                         ${section.subsections ? section.subsections.map(subsection => {
                             return `
-                                <div class="sub-section">
+                                <div class="sub-section" data-id="${subsection.SUB_SEC_ID}">
                                     <h5 class="subsection-title">서브섹션: ${subsection.SUB_SEC_NAME}</h5>
                                     <div class="content">${subsection.SUB_SEC_CONTENT || ''}</div>
                                 </div>
@@ -162,8 +181,8 @@ function loadSearchFAQContent(chapId, subChapId, position, version) {
             });
 
             mainContent.innerHTML = `<h1>${data.chapter}</h1>
-                                    <h2>${data.subChapter.name}</h2>` + 
-                                    `<main class="scrollmini">` + mainHTML + `</main>`;
+                                    <h2>${data.subChapter.name}</h2>` +
+                                `<main class="scrollmini">` + mainHTML + `</main>`;
 
             // Reference 섹션 업데이트
             reference.innerHTML = `
@@ -173,10 +192,71 @@ function loadSearchFAQContent(chapId, subChapId, position, version) {
                     </div>
                 </section>
             `;
+			// 검색된 FAQ의 수정, 삭제 버튼 이벤트 등록
+            attachEventListeners();
+
+            // 페이지네이션 업데이트
+            updatePagination(data.versions, chapId, subChapId, position, version);
         })
         .catch(error => console.error("FAQ 내용 로딩 오류:", error));
 }
 
+// 수정, 삭제 버튼 이벤트 등록 함수
+function attachEventListeners() {
+    document.querySelectorAll('.edit-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const id = this.dataset.id;
+            console.log(`수정 버튼 클릭: ${id}`);
+            editFAQ(id);
+        });
+    });
+
+    document.querySelectorAll('.delete-btn').forEach(button => {
+        button.addEventListener('click', function () {
+            const id = this.dataset.id;
+            console.log(`삭제 버튼 클릭: ${id}`);
+            deleteFAQ(id);
+        });
+    });
+    console.log("이벤트 리스너 재적용 완료!");
+}
+
+// 검색된 FAQ의 페이지네이션 업데이트
+function updatePagination(versions, chapId, subChapId, position, currentVersion) {
+    const pagination = document.querySelector(".pagenation ul");
+    if (!pagination || !versions || versions.length === 0) return;
+
+    let paginationHTML = `
+        <li><a href="#" class="pagination-link" data-version="${versions[0]}">&laquo;</a></li>
+        <li><a href="#" class="pagination-link" data-version="${currentVersion > 1 ? versions[Math.max(0, versions.indexOf(parseInt(currentVersion)) - 1)] : versions[0]}">&lsaquo;</a></li>
+    `;
+
+    // 버전 페이지 번호 생성
+    versions.forEach((ver, index) => {
+        paginationHTML += `
+            <li>
+                <a href="#" class="pagination-link ${ver == currentVersion ? 'active' : ''}" data-version="${ver}">
+                    ${index + 1}
+                </a>
+            </li>
+        `;
+    });
+
+    paginationHTML += `
+        <li><a href="#" class="pagination-link" data-version="${currentVersion < versions.length ? versions[Math.min(versions.length - 1, versions.indexOf(parseInt(currentVersion)) + 1)] : versions[versions.length - 1]}">&rsaquo;</a></li>
+        <li><a href="#" class="pagination-link" data-version="${versions[versions.length - 1]}">&raquo;</a></li>
+    `;
+    pagination.innerHTML = paginationHTML;
+
+    // 페이지네이션 클릭 이벤트 추가
+    document.querySelectorAll(".pagination-link").forEach(link => {
+        link.addEventListener("click", function (e) {
+            e.preventDefault();
+            const newVersion = e.target.dataset.version;
+            loadSearchFAQContent(chapId, subChapId, position, newVersion);
+        });
+    });
+}
 
 // 검색
 function faqSearch() {
@@ -237,7 +317,6 @@ function faqSearch() {
         document.querySelectorAll('.faq-result-link').forEach(link => {
             link.addEventListener('click', (e) => {
                 e.preventDefault();
-
                 const chapId = e.target.dataset.chapId;
                 const subChapId = e.target.dataset.subChapId;
                 const position = e.target.dataset.position;
