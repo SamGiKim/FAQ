@@ -312,6 +312,12 @@ function faqSearch() {
         } else {
             mainFrame.innerHTML = `<p class="no-results">검색 결과가 없습니다.</p>`;
         }
+		reference.innerHTML = `
+				<h2>검색 기록</h2>
+				<div class="search-item">
+					<p>${keyword}</p>
+				</div>
+			`;
 
         // 링크 클릭 시 해당 FAQ 내용 로드
         document.querySelectorAll('.faq-result-link').forEach(link => {
@@ -367,7 +373,7 @@ function setupSectionEvents() {
 					sectionManager.removeElement(e);
 					return;
 			}
-	});
+	});``
 }
 
 // 모든 초기화 로직을 하나로 묶기
